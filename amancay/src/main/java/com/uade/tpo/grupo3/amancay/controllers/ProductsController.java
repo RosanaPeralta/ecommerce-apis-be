@@ -58,6 +58,11 @@ public class ProductsController {
     @PutMapping("/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody ProductRequest productRequest) {
         Optional<Product> existingProduct = productService.getProductById(id);
+        if (existingProduct.isEmpty())
+            return ResponseEntity.notFound().build();
+        Product productToUpdate = existingProduct.get();
+        Product updatedProduct = productService.updateProduct(productToUpdate);
+        return ResponseEntity.ok(updatedProduct); 
     }
 
     // DELETE /product/{id} → Eliminación de un artículo

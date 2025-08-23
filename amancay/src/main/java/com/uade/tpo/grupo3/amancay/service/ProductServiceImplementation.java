@@ -1,6 +1,7 @@
 
 package com.uade.tpo.grupo3.amancay.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,15 +19,18 @@ public class ProductServiceImplementation implements ProductService {
     private ProductRepository productRepository;
 
     public Page<Product> getProduct(PageRequest pageRequest){
-        
+        return productRepository.findAll(pageRequest);
     }
 
     public Optional<Product> getProductById(Long productId){
-
-    } //Detalle de los artículos
+        return productRepository.findById(productId);
+    }
 
     public Product createProduct(String description) throws DuplicateException{
-
+       List<Product> products = productRepository.findByDescription(description);
+        if (products.isEmpty())
+            return productRepository.save(new Product(description));
+        throw new DuplicateException(); 
     }
 
     public void deleteProduct(Long productId){
