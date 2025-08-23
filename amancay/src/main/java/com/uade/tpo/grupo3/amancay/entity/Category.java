@@ -5,18 +5,18 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
 import lombok.Data;
 
-@Data
 @Entity
+@Data
 public class Category {
 
     public Category() {
     }
 
-    public Category(String description) {
-        this.description = description;
+    public Category(String name, String description) {
+      this.name = name;
+      this.description = description;
     }
 
     @Id
@@ -24,8 +24,9 @@ public class Category {
     private Long id;
 
     @Column
+    private String name;
+
+    @Column
     private String description;
 
-    @OneToOne(mappedBy = "category")
-    private Product product;
 }
