@@ -16,35 +16,35 @@ import com.uade.tpo.grupo3.amancay.repository.CategoryRepository;
 @Service
 public class CategoryServiceImpl implements CategoryService {
 
-    @Autowired
-    private CategoryRepository categoryRepository;
+  @Autowired
+  private CategoryRepository categoryRepository;
 
-    public Page<Category> getCategories(PageRequest pageable) {
-        return categoryRepository.findAll(pageable);
-    }
-
-    public Optional<Category> getCategoryById(Long categoryId) {
-        return categoryRepository.findById(categoryId);
-    }
-
-    public Category createCategory(String name, String description) {
-      return categoryRepository.save(new Category(name, description));
-    }
-
-    public void deleteCategory(Long categoryId) {
-        categoryRepository.deleteById(categoryId);
-    }
-
-  public CategoryResponse updateCategory(CategoryRequest categoryRequest) {
-      Category category = categoryRepository.findById(categoryRequest.getId())
-              .orElseThrow(() -> new NotFoundException("Fallo la actualizacion"));
-
-      category.setName(categoryRequest.getName());
-      category.setDescription(categoryRequest.getDescription());
-
-      Category updatedCategory = categoryRepository.saveAndFlush(category);
-
-      return new CategoryResponse(updatedCategory.getId());
+  public Page<Category> getCategories(PageRequest pageable) {
+    return categoryRepository.findAll(pageable);
   }
 
+  public Optional<Category> getCategoryById(Long categoryId) {
+    return categoryRepository.findById(categoryId);
+  }
+
+  public Category createCategory(String name, String description) {
+    return categoryRepository.save(new Category(name, description));
+  }
+
+  public void deleteCategory(Long categoryId) {
+    categoryRepository.deleteById(categoryId);
+  }
+
+  public CategoryResponse updateCategory(Long categoryId, CategoryRequest categoryRequest) {
+    Category category = categoryRepository.findById(categoryId)
+        .orElseThrow(() -> new NotFoundException("Fallo la actualizacion"));
+
+    category.setName(categoryRequest.getName() != null ? categoryRequest.getName() : category.getName());
+    category.setDescription(
+        categoryRequest.getDescription() != null ? categoryRequest.getDescription() : category.getDescription());
+
+    Category updatedCategory = categoryRepository.saveAndFlush(category);
+
+    return new CategoryResponse(updatedCategory.getId());
+  }
 }

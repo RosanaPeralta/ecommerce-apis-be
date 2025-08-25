@@ -57,14 +57,14 @@ public class CategoriesController {
         return ResponseEntity.created(URI.create("/categories/" + result.getId())).body(result);
     }
 
-   @PutMapping // PUT /categories/{id}
-   public ResponseEntity<CategoryResponse> updateCategory(@RequestBody CategoryRequest categoryRequest)  throws InvalidParameterException {
-      CategoryResponse result = categoryService.updateCategory(categoryRequest);
+   @PutMapping("/{categoryId}") // PUT /categories/{id}
+   public ResponseEntity<CategoryResponse> updateCategory(@PathVariable Long categoryId, @RequestBody CategoryRequest categoryRequest)  throws InvalidParameterException {
+      CategoryResponse result = categoryService.updateCategory(categoryId, categoryRequest);
       return ResponseEntity.ok().body(result);
    }
 
-    @DeleteMapping // PUT /categories/{id}
-    public void deleteCategory(@RequestBody CategoryRequest categoryRequest)  throws InvalidParameterException {
-      categoryService.deleteCategory(categoryRequest.getId());
+    @DeleteMapping("/{categoryId}") // DELETE /categories/{id}
+    public void deleteCategory(@PathVariable Long categoryId)  throws InvalidParameterException {
+      categoryService.deleteCategory(categoryId);
     }
 }

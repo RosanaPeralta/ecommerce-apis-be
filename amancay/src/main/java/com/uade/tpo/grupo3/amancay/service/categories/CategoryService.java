@@ -20,5 +20,5 @@ public interface CategoryService {
 
     public void deleteCategory(Long categoryId);
 
-    public CategoryResponse updateCategory(CategoryRequest entity) throws InvalidParameterException;
+    public CategoryResponse updateCategory(Long categoryId, CategoryRequest entity) throws InvalidParameterException;
 }
