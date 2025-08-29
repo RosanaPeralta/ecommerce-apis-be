@@ -8,7 +8,8 @@ import org.springframework.data.domain.PageRequest;
 
 import com.uade.tpo.grupo3.amancay.entity.Activity;
 import com.uade.tpo.grupo3.amancay.entity.dto.activities.ActivityRequest;
-import com.uade.tpo.grupo3.amancay.entity.dto.activities.ActivityResponse;
+import com.uade.tpo.grupo3.amancay.entity.dto.common.GenericResponse;
+import com.uade.tpo.grupo3.amancay.exceptions.DuplicateException;
 
 public interface ActivityService {
     
@@ -16,10 +17,10 @@ public interface ActivityService {
 
     public Optional<Activity> getActivityById(Long activityId);
 
-    public Activity createActivity(String name, String description);
+    public Activity createActivity(String Name, String description) throws DuplicateException;
 
-    public void deleteActivity(Long activityId);
+    public GenericResponse deleteActivity(Long activityId);
 
-    public ActivityResponse updateActivity(ActivityRequest entity) throws InvalidParameterException;
+    public GenericResponse updateActivity(Long activityId, ActivityRequest entity) throws InvalidParameterException;
 
 }

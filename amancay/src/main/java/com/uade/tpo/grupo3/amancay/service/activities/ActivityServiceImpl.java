@@ -5,12 +5,11 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.uade.tpo.grupo3.amancay.entity.Activity;
 import com.uade.tpo.grupo3.amancay.entity.dto.activities.ActivityRequest;
-import com.uade.tpo.grupo3.amancay.entity.dto.activities.ActivityResponse;
+import com.uade.tpo.grupo3.amancay.entity.dto.common.GenericResponse;
 import com.uade.tpo.grupo3.amancay.exceptions.NotFoundException;
 import com.uade.tpo.grupo3.amancay.repository.ActivityRepository;
 
@@ -25,30 +24,27 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     public Optional<Activity> getActivityById(Long activityId) {
-        Activity activity = activityRepository.findById(activityId).orElseThrow(() -> new NotFoundException("No se encontró la actividad con ID " + activityId))
-        
-        return activity;
+        return activityRepository.findById(activityId);
     }
 
     public Activity createActivity(String name, String description) {
         return activityRepository.save(new Activity(name, description)); //agregar excepción si falla la creación
     }
 
-    public void deleteActivity(Long activityId) {
-        Activity activity = activityRepository.findById(activityId).orElseThrow(() -> new NotFoundException("No se encontró la actividad con ID " + activityId));
-
+    public GenericResponse deleteActivity(Long activityId) {
         activityRepository.deleteById(activityId);
+        return new GenericResponse(activityId, "Actividad eliminada correctamente");
     }
 
-    public ActivityResponse updateActivity(ActivityRequest activityRequest) {
-        Activity activity = activityRepository.findById(activityRequest.getId()).orElseThrow(() -> new NotFoundException("No se encontró la actividad con ID " + activityRequest.getId()));
+    public GenericResponse updateActivity(Long activityId, ActivityRequest activityRequest) {
+        Activity activity = activityRepository.findById(activityId).orElseThrow(() -> new NotFoundException("No se encontró la actividad con ID " + activityId));
 
         activity.setName(activityRequest.getName());
         activity.setDescription(activityRequest.getDescription());
 
-        Activity updatedActivity = activityRepository.saveAndFlush(activity);
+        activityRepository.saveAndFlush(activity);
 
-        return new ActivityResponse(updatedActivity.getId());
+        return new GenericResponse(activityId, "Se actualizó la actividad con id " + activityId);
     }
     
 }
