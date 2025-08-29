@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.uade.tpo.grupo3.amancay.entity.Category;
 import com.uade.tpo.grupo3.amancay.entity.dto.categories.CategoryRequest;
 import com.uade.tpo.grupo3.amancay.entity.dto.categories.CategoryResponse;
+import com.uade.tpo.grupo3.amancay.entity.dto.common.GenericResponse;
 import com.uade.tpo.grupo3.amancay.exceptions.NotFoundException;
 import com.uade.tpo.grupo3.amancay.repository.CategoryRepository;
 
@@ -28,23 +29,23 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     public Category createCategory(String name, String description) {
-      return categoryRepository.save(new Category(name, description));
+        return categoryRepository.save(new Category(name, description));
     }
 
-    public void deleteCategory(Long categoryId) {
+    public GenericResponse deleteCategory(Long categoryId) {
         categoryRepository.deleteById(categoryId);
+        return new GenericResponse(categoryId, "Categoría eliminada correctamente");
     }
 
-  public CategoryResponse updateCategory(CategoryRequest categoryRequest) {
-      Category category = categoryRepository.findById(categoryRequest.getId())
-              .orElseThrow(() -> new NotFoundException("Fallo la actualizacion"));
+    public GenericResponse updateCategory(Long categoryId, CategoryRequest categoryRequest) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new NotFoundException("No se encontró la categoría con id: " + categoryId));
 
-      category.setName(categoryRequest.getName());
-      category.setDescription(categoryRequest.getDescription());
+        category.setName(categoryRequest.getName());
+        category.setDescription(categoryRequest.getDescription());
 
-      Category updatedCategory = categoryRepository.saveAndFlush(category);
+        categoryRepository.save(category);
 
-      return new CategoryResponse(updatedCategory.getId());
-  }
-
+        return new GenericResponse(categoryId, "Categoría actualizada correctamente");
+    }
 }
