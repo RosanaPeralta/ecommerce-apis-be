@@ -4,6 +4,7 @@
 
 <!-- Trello: https://trello.com/b/AISqZ52A/aplicaciones-interactivas -->
 <!-- Repositorio github: https://github.com/RosanaPeralta/ecommerce-apis-be -->
+<!-- Workspace Postman : https://www.postman.com/apis88-8053/apis-workspace/collection/2iy3id1/api-documentation-reference -->
 
 
 <!-- =================================== -->
