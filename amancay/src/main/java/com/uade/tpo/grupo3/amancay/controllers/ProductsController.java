@@ -22,16 +22,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PutMapping;
 
-
-
 @RestController
 @RequestMapping("products")
 public class ProductsController {
-    
+
     @Autowired
     private ProductsService productsService;
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<Page<Product>> getProducts(
             @RequestParam(required = false) Integer page,
             @RequestParam(required = false) Integer size) {
@@ -43,9 +41,9 @@ public class ProductsController {
     @GetMapping("/{productId}")
     public ResponseEntity<Product> getProductById(@PathVariable Long productId) {
         Optional<Product> result = productsService.getProductById(productId);
-        if(result.isPresent())
-         return ResponseEntity.ok(result.get());
-        
+        if (result.isPresent())
+            return ResponseEntity.ok(result.get());
+
         return ResponseEntity.noContent().build();
     }
 
@@ -56,7 +54,8 @@ public class ProductsController {
     }
 
     @PutMapping("/{productId}")
-    public ResponseEntity<GenericResponse> updateProduct(@PathVariable Long productId, @RequestBody ProductRequest request) {
+    public ResponseEntity<GenericResponse> updateProduct(@PathVariable Long productId,
+            @RequestBody ProductRequest request) {
         GenericResponse result = productsService.updateProduct(productId, request);
         return ResponseEntity.ok(result);
     }
@@ -66,4 +65,26 @@ public class ProductsController {
         GenericResponse result = productsService.deleteProduct(productId);
         return ResponseEntity.ok(result);
     }
+
+    @GetMapping
+    public ResponseEntity<Page<Product>> getFilteredProducts(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size,
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) Long activityId,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice) {
+
+        PageRequest pageRequest = PageRequest.of(page, size);
+
+        Page<Product> products = productsService.getFilteredProducts(
+                pageRequest, categoryId, activityId, minPrice, maxPrice);
+
+        if (products.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(products);
+    }
+
 }
