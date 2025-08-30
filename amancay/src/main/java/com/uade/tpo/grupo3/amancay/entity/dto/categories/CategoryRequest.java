@@ -4,11 +4,11 @@ import lombok.Data;
 
 @Data
 public class CategoryRequest {
-    private String name;
-    private String description;
+  private String name;
+  private String description;
 
-    public CategoryRequest(String name, String description){
-      this.name = name;
-      this.description = description;
-    }
+  public CategoryRequest(String name, String description) {
+    this.name = name;
+    this.description = description;
+  }
 }

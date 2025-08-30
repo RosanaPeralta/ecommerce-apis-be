@@ -6,10 +6,11 @@ import lombok.Data;
 
 //TODO: BORRAR CLASE
 @Data
-public class CategoryResponse extends GenericResponse{
+public class CategoryResponse extends GenericResponse {
 
-  //Si hiciera falta aca agregariamos mas campos para retornar. Por ahora no hace falta.
-    public CategoryResponse(Long id, String message){      
-      super(id, message);
-    }
+  // Si hiciera falta aca agregariamos mas campos para retornar. Por ahora no hace
+  // falta.
+  public CategoryResponse(Long id, String message) {
+    super(id, message);
+  }
 }

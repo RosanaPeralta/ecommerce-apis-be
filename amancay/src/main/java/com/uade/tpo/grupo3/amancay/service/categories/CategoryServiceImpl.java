@@ -29,7 +29,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     public Category createCategory(String name, String description) {
-      return categoryRepository.save(new Category(name, description));
+        return categoryRepository.save(new Category(name, description));
     }
 
     public GenericResponse deleteCategory(Long categoryId) {
@@ -38,14 +38,14 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     public GenericResponse updateCategory(Long categoryId, CategoryRequest categoryRequest) {
-      Category category = categoryRepository.findById(categoryId)
-              .orElseThrow(() -> new NotFoundException("No se encontró la categoría con id: " + categoryId));
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new NotFoundException("No se encontró la categoría con id: " + categoryId));
 
-      category.setName(categoryRequest.getName());
-      category.setDescription(categoryRequest.getDescription());
+        category.setName(categoryRequest.getName());
+        category.setDescription(categoryRequest.getDescription());
 
-      categoryRepository.save(category);
+        categoryRepository.save(category);
 
-      return new GenericResponse(categoryId, "Categoría actualizada correctamente");
+        return new GenericResponse(categoryId, "Categoría actualizada correctamente");
     }
 }
