@@ -26,7 +26,8 @@ Este repositorio contiene el backend del e‑commerce **Amancay**. Está desarro
 
 ---
 
-## 🚀 Primeros pasos
+## 🚀 Primeros pasos 
+
 
 ### Configurar la base de datos
 1. Inicia tu servidor MySQL 8.
