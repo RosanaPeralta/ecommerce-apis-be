@@ -36,10 +36,6 @@ public class OrderServiceImpl implements OrderService {
     public Order createOrder(OrderRequest orderRequest) {
         Order order = new Order();
         order.setCustomerId(orderRequest.getCustomerId());
-        order.setProduct(new Product());
-        order.getProduct().setId(orderRequest.getProductId());
-        order.setQuantity(orderRequest.getQuantity());
-        order.setPrice(orderRequest.getPrice());
         order.setStatus(orderRequest.getStatus() != null ? orderRequest.getStatus() : "PENDING");
         order.setNotes(orderRequest.getNotes());
         order.setOrderDate(LocalDateTime.now());
@@ -65,10 +61,6 @@ public class OrderServiceImpl implements OrderService {
 
         Order order = existingOrder.get();
         order.setCustomerId(orderRequest.getCustomerId());
-        order.setProduct(new Product());
-        order.getProduct().setId(orderRequest.getProductId());
-        order.setQuantity(orderRequest.getQuantity());
-        order.setPrice(orderRequest.getPrice());
         order.setStatus(orderRequest.getStatus());
         order.setNotes(orderRequest.getNotes());
         order.setUpdatedDate(LocalDateTime.now());

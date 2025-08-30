@@ -1,15 +1,21 @@
 package com.uade.tpo.grupo3.amancay.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.Data;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "orders")
@@ -19,15 +25,10 @@ public class Order {
     public Order() {
     }
 
-    public Order(Product product, Long customerId, Long productId, int quantity, float price, String status){
+    public Order(Long customerId, String status) {
         this.customerId = customerId;
-        this.product = product;
-        this.product.setId(productId);
-        this.quantity = quantity;
-        this.price = price;
+        this.items = new ArrayList<>();
         this.status = status;
-        this.orderDate = LocalDateTime.now();
-        this.updatedDate = LocalDateTime.now();
     }
 
     @Id
@@ -37,18 +38,14 @@ public class Order {
     @Column(nullable = false)
     private Long customerId;
 
-    @ManyToOne()
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
-
-    @Column(nullable = false)
-    private int quantity;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderItem> items = new ArrayList<>();
 
     @Column(nullable = false)
     private String status;
     
-    @Column(nullable = false)
-    private float price;
+    @Column(name = "total_amount", nullable = false)
+    private Double totalAmount;
 
     @Column(name = "date_of_order", nullable = false)
     private LocalDateTime orderDate;
@@ -59,5 +56,26 @@ public class Order {
     @Column
     private String notes;
 
+    @PrePersist
+    void prePersist() {
+      orderDate = LocalDateTime.now();
+      updatedDate = orderDate;
+    }
 
+    @PreUpdate
+    void preUpdate() {
+      updatedDate = LocalDateTime.now();
+    }
+
+    public void addItem(Product product, int quantity, Double unitPrice) {
+        OrderItem item = new OrderItem(this, product, quantity, unitPrice);
+        items.add(item);
+        calculateTotal();
+    }
+
+    private void calculateTotal() {
+        this.totalAmount = items.stream()
+                            .map(i -> i.getSubtotal() == null ? 0.0 : i.getSubtotal())
+                            .reduce(0.0, Double::sum);
+    }
 }

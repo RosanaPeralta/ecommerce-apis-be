@@ -10,7 +10,7 @@ Backend de **Amancay**, un e‑commerce construido con **Spring Boot** y **MySQL
 - [Primeros pasos](#primeros-pasos)
   - [Configurar la base de datos](#configurar-la-base-de-datos)
   - [Configurar la aplicación](#configurar-la-aplicación)
-- [Colección de API (Postman)](#colección-de-api-postman)
+- [Prototipo en figma](#prototipo-figma)
 
 ---
 
@@ -60,7 +60,6 @@ La API quedará disponible (por defecto) en `http://localhost:8080`.
 
 ---
 
-## 🧪 Colección de API (Postman)
+## 🧪 Prototipo en figma
 
-- <https://www.postman.com/apis88-8053/apis-workspace/collection/2iy3id1/api-documentation-reference>
-
+- <https://www.figma.com/design/Jd1Sk9rtLyLPmGFGQvJTcb/Prototypes-Amancay?node-id=0-1&p=f&t=YjN0LRIeTZfwEPZh-0>

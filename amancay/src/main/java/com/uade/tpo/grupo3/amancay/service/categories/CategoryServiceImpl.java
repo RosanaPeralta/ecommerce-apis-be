@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import com.uade.tpo.grupo3.amancay.entity.Category;
 import com.uade.tpo.grupo3.amancay.entity.dto.categories.CategoryRequest;
-import com.uade.tpo.grupo3.amancay.entity.dto.categories.CategoryResponse;
 import com.uade.tpo.grupo3.amancay.entity.dto.common.GenericResponse;
 import com.uade.tpo.grupo3.amancay.exceptions.NotFoundException;
 import com.uade.tpo.grupo3.amancay.repository.CategoryRepository;
@@ -33,6 +32,10 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     public GenericResponse deleteCategory(Long categoryId) {
+
+        categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new NotFoundException("No se encontró la categoría con id: " + categoryId));
+
         categoryRepository.deleteById(categoryId);
         return new GenericResponse(categoryId, "Categoría eliminada correctamente");
     }

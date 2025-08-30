@@ -46,7 +46,7 @@ public class ProductsServiceImpl implements ProductsService {
         product.setStatus("ACTIVE");
         product.setImageUrl(productRequest.getImageUrl());
         System.out.println("categoryId: " + productRequest.getCategoryId());
-        System.out.println("activityId: " + productRequest.getActivityId());
+        System.out.println("activityIds: " + productRequest.getActivityIds());
         // Set category if is provided, and verify if the category exists
         if (productRequest.getCategoryId() != null) {
             Category category = categoryRepository.findById(productRequest.getCategoryId())
