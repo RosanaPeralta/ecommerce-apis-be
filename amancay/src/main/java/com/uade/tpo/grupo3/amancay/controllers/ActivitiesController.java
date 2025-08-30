@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.uade.tpo.grupo3.amancay.entity.Activity;
 import com.uade.tpo.grupo3.amancay.entity.dto.activities.ActivityRequest;
 import com.uade.tpo.grupo3.amancay.entity.dto.common.GenericResponse;
+import com.uade.tpo.grupo3.amancay.entity.dto.products.ProductResponse;
 import com.uade.tpo.grupo3.amancay.exceptions.DuplicateException;
 import com.uade.tpo.grupo3.amancay.service.activities.ActivityService;
+import com.uade.tpo.grupo3.amancay.service.Products.ProductsService;
 
 import java.net.URI;
 import java.security.InvalidParameterException;
@@ -32,6 +34,9 @@ public class ActivitiesController {
 
     @Autowired
     private ActivityService activityService;
+
+    @Autowired
+    private ProductsService productsService;
 
     @GetMapping // GET /activities
     public ResponseEntity<Page<Activity>> getActivities(@RequestParam(required = false) Integer page, @RequestParam(required = false) Integer size) {
@@ -65,6 +70,22 @@ public class ActivitiesController {
     public ResponseEntity<GenericResponse> deleteActivity(@PathVariable Long activityId) throws InvalidParameterException {
         GenericResponse result = activityService.deleteActivity(activityId);
         return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/{activityId}/products")
+    public ResponseEntity<Page<ProductResponse>> getProductsByActivity(
+            @PathVariable Long activityId,
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer size) {
+        Page<ProductResponse> productsPage;
+        if (page == null || size == null)
+            productsPage = productsService.getProductsByActivity(activityId, PageRequest.of(0, Integer.MAX_VALUE))
+                    .map(product -> productsService.convertToResponse(product));
+        else
+            productsPage = productsService.getProductsByActivity(activityId, PageRequest.of(page, size))
+                    .map(product -> productsService.convertToResponse(product));
+        
+        return ResponseEntity.ok(productsPage);
     }
     
 }
