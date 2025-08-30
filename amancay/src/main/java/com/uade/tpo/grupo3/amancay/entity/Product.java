@@ -19,18 +19,16 @@ public class Product {
     };
 
     public Product(String description, String name, int stock, Double price, String status, 
-            String imageUrl 
-            // Category category, Activity activity, Discount discount
-            ) {
+            String imageUrl, Category category, Activity activity, Discount discount) {
         this.description = description;
         this.name = name;
         this.stock = stock;
         this.price = price;
         this.status = status;
         this.imageUrl = imageUrl;
-        // this.category = category;
-        // this.activity = activity;
-        // this.discount = discount;
+        this.category = category;
+        this.activity = activity;
+        this.discount = discount;
     }
 
     @Id
@@ -50,15 +48,15 @@ public class Product {
     @Column
     private String imageUrl;
 
-    // @ManyToOne //Todo: ver como relacionar si 1 a muchos o cada producto a 1 actividad
-    // @JoinColumn(name = "id_category", nullable = false)
-    // private Category category;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 
-    // @ManyToOne
-    // @JoinColumn(name = "id_activity")
-    // private Activity activity;
+    @ManyToOne
+    @JoinColumn(name = "activity_id")
+    private Activity activity;
     
-    // @OneToOne
-    // @JoinColumn(name = "id_discount")
-    // private Discount discount;
+    @OneToOne
+    @JoinColumn(name = "discount_id")
+    private Discount discount;
 }
