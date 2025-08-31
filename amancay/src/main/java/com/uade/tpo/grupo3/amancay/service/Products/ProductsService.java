@@ -22,5 +22,5 @@ public interface ProductsService {
     public GenericResponse updateProduct(Long id, ProductRequest product) throws InvalidParameterException;
 
     public Page<Product> getFilteredProducts(PageRequest pageRequest, Long categoryId, Long activityId, Double minPrice,
-            Double maxPrice);
+            Double maxPrice, boolean withStock);
 }

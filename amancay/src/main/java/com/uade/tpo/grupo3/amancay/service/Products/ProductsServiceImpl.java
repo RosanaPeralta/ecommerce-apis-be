@@ -107,10 +107,10 @@ public class ProductsServiceImpl implements ProductsService {
     }
 
     public Page<Product> getFilteredProducts(PageRequest pageRequest, Long categoryId, Long activityId, Double minPrice,
-            Double maxPrice) {
-        if (categoryId != null || activityId != null || minPrice != null || maxPrice != null) {
+            Double maxPrice, boolean withStock) {
+        if (categoryId != null || activityId != null || minPrice != null || maxPrice != null || withStock == true) {
             List<Product> products = productRepository.findByFilters(categoryId, activityId, minPrice, maxPrice,
-                    pageRequest);
+                    withStock, pageRequest);
             return new PageImpl<>(products, pageRequest, products.size());
         }
 
