@@ -11,10 +11,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.uade.tpo.grupo3.amancay.service.Products.*;
-import com.uade.tpo.grupo3.amancay.entity.Product;
+
 import com.uade.tpo.grupo3.amancay.entity.dto.common.GenericResponse;
 import com.uade.tpo.grupo3.amancay.entity.dto.products.ProductRequest;
+import com.uade.tpo.grupo3.amancay.entity.dto.products.ProductResponse;
+import com.uade.tpo.grupo3.amancay.service.products.ProductsService;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +31,7 @@ public class ProductsController {
     private ProductsService productsService;
 
     @GetMapping("/all")
-    public ResponseEntity<Page<Product>> getProducts(
+    public ResponseEntity<Page<ProductResponse>> getProducts(
             @RequestParam(required = false) Integer page,
             @RequestParam(required = false) Integer size) {
         if (page == null || size == null)
@@ -39,8 +40,8 @@ public class ProductsController {
     }
 
     @GetMapping("/{productId}")
-    public ResponseEntity<Product> getProductById(@PathVariable Long productId) {
-        Optional<Product> result = productsService.getProductById(productId);
+    public ResponseEntity<ProductResponse> getProductById(@PathVariable Long productId) {
+        Optional<ProductResponse> result = productsService.getProductById(productId);
         if (result.isPresent())
             return ResponseEntity.ok(result.get());
 
@@ -48,8 +49,8 @@ public class ProductsController {
     }
 
     @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestBody ProductRequest request) {
-        Product result = productsService.createProduct(request);
+    public ResponseEntity<ProductResponse> createProduct(@RequestBody ProductRequest request) {
+        ProductResponse result = productsService.createProduct(request);
         return ResponseEntity.created(URI.create("/products/" + result.getId())).body(result);
     }
 
@@ -67,7 +68,7 @@ public class ProductsController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<Product>> getFilteredProducts(
+    public ResponseEntity<Page<ProductResponse>> getFilteredProducts(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer size,
             @RequestParam(required = false) Long categoryId,
@@ -77,7 +78,7 @@ public class ProductsController {
 
         PageRequest pageRequest = PageRequest.of(page, size);
 
-        Page<Product> products = productsService.getFilteredProducts(
+        Page<ProductResponse> products = productsService.getFilteredProducts(
                 pageRequest, categoryId, activityId, minPrice, maxPrice);
 
         if (products.isEmpty()) {

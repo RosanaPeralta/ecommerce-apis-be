@@ -1,4 +1,4 @@
-package com.uade.tpo.grupo3.amancay.service.Products;
+package com.uade.tpo.grupo3.amancay.service.products;
 
 import java.security.InvalidParameterException;
 import java.util.Optional;
@@ -6,21 +6,22 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
-import com.uade.tpo.grupo3.amancay.entity.Product;
 import com.uade.tpo.grupo3.amancay.entity.dto.common.GenericResponse;
 import com.uade.tpo.grupo3.amancay.entity.dto.products.ProductRequest;
+import com.uade.tpo.grupo3.amancay.entity.dto.products.ProductResponse;
 
 public interface ProductsService {
-    public Page<Product> getProducts(PageRequest pageRequest);
+    public Page<ProductResponse> getProducts(PageRequest pageRequest);
 
-    public Optional<Product> getProductById(Long id);
+    public Optional<ProductResponse> getProductById(Long id);
 
-    public Product createProduct(ProductRequest product);
+    public ProductResponse createProduct(ProductRequest product);
 
     public GenericResponse deleteProduct(Long id);
 
     public GenericResponse updateProduct(Long id, ProductRequest product) throws InvalidParameterException;
 
-    public Page<Product> getFilteredProducts(PageRequest pageRequest, Long categoryId, Long activityId, Double minPrice,
+    public Page<ProductResponse> getFilteredProducts(PageRequest pageRequest, Long categoryId, Long activityId,
+            Double minPrice,
             Double maxPrice);
 }
