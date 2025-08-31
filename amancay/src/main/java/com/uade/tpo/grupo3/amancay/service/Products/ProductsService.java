@@ -17,7 +17,7 @@ public interface ProductsService {
 
     public Product createProduct(ProductRequest product);
 
-    public GenericResponse deleteProduct(Long id);
+    public GenericResponse deleteProduct(Long id) throws InvalidParameterException;
 
     public GenericResponse updateProduct(Long id, ProductRequest product) throws InvalidParameterException;
 

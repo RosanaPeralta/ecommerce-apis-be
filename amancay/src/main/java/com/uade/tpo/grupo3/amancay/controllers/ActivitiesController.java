@@ -25,6 +25,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 
+
 @RestController
 @RequestMapping("activities")
 public class ActivitiesController {
@@ -33,8 +34,7 @@ public class ActivitiesController {
     private ActivityService activityService;
 
     @GetMapping // GET /activities
-    public ResponseEntity<Page<Activity>> getActivities(@RequestParam(required = false) Integer page,
-            @RequestParam(required = false) Integer size) {
+    public ResponseEntity<Page<Activity>> getActivities(@RequestParam(required = false) Integer page, @RequestParam(required = false) Integer size) {
         if (page == null || size == null)
             return ResponseEntity.ok(activityService.getActivities(PageRequest.of(0, Integer.MAX_VALUE)));
         return ResponseEntity.ok(activityService.getActivities(PageRequest.of(page, size)));
@@ -50,24 +50,21 @@ public class ActivitiesController {
     }
 
     @PostMapping // POST /activities
-    public ResponseEntity<Object> createActivity(@RequestBody ActivityRequest activityRequest)
-            throws DuplicateException {
+    public ResponseEntity<Object> createActivity(@RequestBody ActivityRequest activityRequest) throws DuplicateException {
         Activity result = activityService.createActivity(activityRequest.getName(), activityRequest.getDescription());
         return ResponseEntity.created(URI.create("/activities/" + result.getId())).body(result);
     }
 
-    @PutMapping("/{activityId}") // PUT /activities/{id}
-    public ResponseEntity<GenericResponse> updateActivity(@PathVariable Long activityId,
-            @RequestBody ActivityRequest activityRequest) throws InvalidParameterException {
-        GenericResponse result = activityService.updateActivity(activityId, activityRequest);
-        return ResponseEntity.ok().body(result); // revisar esta linea
-    }
+   @PutMapping("/{activityId}") // PUT /activities/{id}
+   public ResponseEntity<GenericResponse> updateActivity(@PathVariable Long activityId, @RequestBody ActivityRequest activityRequest) throws InvalidParameterException {
+      GenericResponse result = activityService.updateActivity(activityId, activityRequest);
+      return ResponseEntity.ok().body(result);
+   }
 
     @DeleteMapping("/{activityId}") // DELETE /activities/{id}
-    public ResponseEntity<GenericResponse> deleteActivity(@PathVariable Long activityId)
-            throws InvalidParameterException {
+    public ResponseEntity<GenericResponse> deleteActivity(@PathVariable Long activityId) throws InvalidParameterException {
         GenericResponse result = activityService.deleteActivity(activityId);
         return ResponseEntity.ok(result);
     }
-
+    
 }

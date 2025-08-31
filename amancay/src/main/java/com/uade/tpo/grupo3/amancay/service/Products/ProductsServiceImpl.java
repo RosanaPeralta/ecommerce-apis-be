@@ -16,6 +16,7 @@ import com.uade.tpo.grupo3.amancay.entity.Category;
 import com.uade.tpo.grupo3.amancay.entity.Activity;
 import com.uade.tpo.grupo3.amancay.entity.dto.common.GenericResponse;
 import com.uade.tpo.grupo3.amancay.entity.dto.products.ProductRequest;
+import com.uade.tpo.grupo3.amancay.exceptions.NotFoundException;
 
 @Service
 public class ProductsServiceImpl implements ProductsService {
@@ -65,7 +66,10 @@ public class ProductsServiceImpl implements ProductsService {
     }
 
     public GenericResponse deleteProduct(Long productId) {
-        productRepository.deleteById(productId);
+        Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("No se encontró el producto con ID " + productId));
+        
+        productRepository.delete(product);
+        
         return new GenericResponse(productId, "Producto eliminado correctamente");
     }
 

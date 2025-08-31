@@ -1,6 +1,7 @@
 package com.uade.tpo.grupo3.amancay.controllers;
 
 import java.net.URI;
+import java.security.InvalidParameterException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +62,7 @@ public class ProductsController {
     }
 
     @DeleteMapping("/{productId}")
-    public ResponseEntity<GenericResponse> deleteProduct(@PathVariable Long productId) {
+    public ResponseEntity<GenericResponse> deleteProduct(@PathVariable Long productId) throws InvalidParameterException {
         GenericResponse result = productsService.deleteProduct(productId);
         return ResponseEntity.ok(result);
     }

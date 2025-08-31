@@ -10,6 +10,8 @@ import com.uade.tpo.grupo3.amancay.entity.Category;
 import com.uade.tpo.grupo3.amancay.entity.dto.categories.CategoryRequest;
 import com.uade.tpo.grupo3.amancay.entity.dto.common.GenericResponse;
 
+import io.micrometer.core.instrument.config.validate.Validated.Invalid;
+
 public interface CategoryService {
     public Page<Category> getCategories(PageRequest pageRequest);
 
@@ -17,8 +19,7 @@ public interface CategoryService {
 
     public Category createCategory(String name, String description);
 
-    public GenericResponse deleteCategory(Long categoryId);
+    public GenericResponse deleteCategory(Long categoryId) throws InvalidParameterException;
 
-    public GenericResponse updateCategory(Long categoryId, CategoryRequest categoryRequest)
-            throws InvalidParameterException;
+    public GenericResponse updateCategory(Long categoryId, CategoryRequest categoryRequest) throws InvalidParameterException;
 }
