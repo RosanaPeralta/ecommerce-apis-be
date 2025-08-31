@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.uade.tpo.grupo3.amancay.entity.ProductImage;
 import com.uade.tpo.grupo3.amancay.entity.dto.common.GenericResponse;
 import com.uade.tpo.grupo3.amancay.service.product_images.ProductImageService;
 
@@ -34,6 +33,17 @@ public class ProductImageController {
          var result = new GenericResponse(null, description);
 
         return ResponseEntity.ok( result);
+    }
+
+    @PostMapping(value = "/upload/many", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<List<GenericResponse>> uploadMany(
+            @RequestPart("files") MultipartFile[] files
+    ) {
+        var result = new java.util.ArrayList<GenericResponse>();
+        var response = new GenericResponse(null, null);
+        result.add(response);
+
+        return ResponseEntity.ok(result);
     }
 
 
