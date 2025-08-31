@@ -2,14 +2,10 @@ package com.uade.tpo.grupo3.amancay.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-// import lombok.EqualsAndHashCode;
-// import lombok.ToString;
 
 @Entity
 @Table(name = "product_images")
 @Data
-// @EqualsAndHashCode(exclude = "product")
-// @ToString(exclude = "product")
 public class ProductImage {
 
     public ProductImage() {
@@ -19,7 +15,6 @@ public class ProductImage {
         this.name = name;
         this.type = type;
         this.imageData = imageData;
-        // this.product = product;
     }
 
     @Id
@@ -28,31 +23,16 @@ public class ProductImage {
 
     @Column(nullable = false)
     private String name;
-    
+
     @Column(nullable = false)
     private String type;
 
-    @Lob // Para imágenes grandes
-    @Column(name = "imagedata", nullable = false)
+    //TODO: Verify if we need to save as base64
+    @Lob
+    @Column(name = "image_data", columnDefinition = "LONGBLOB")
     private byte[] imageData;
 
-    // @Column(name = "file_size")
-    // private Long fileSize;
-
-    // @Column(name = "upload_date")
-    // @Temporal(TemporalType.TIMESTAMP)
-    // private java.util.Date uploadDate;
-
-    // Relación con Product
-    // @ManyToOne(fetch = FetchType.LAZY)
-    // @JoinColumn(name = "product_id", nullable = false)
-    // private Product product;
-
-    // @PrePersist
-    // protected void onCreate() {
-    //     uploadDate = new java.util.Date();
-    //     if (imageData != null) {
-    //         fileSize = (long) imageData.length;
-    //     }
-    // }
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
 }
