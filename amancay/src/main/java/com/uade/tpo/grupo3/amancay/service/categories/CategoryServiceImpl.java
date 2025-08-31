@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import com.uade.tpo.grupo3.amancay.entity.Category;
 import com.uade.tpo.grupo3.amancay.entity.dto.categories.CategoryRequest;
-import com.uade.tpo.grupo3.amancay.entity.dto.categories.CategoryResponse;
 import com.uade.tpo.grupo3.amancay.entity.dto.common.GenericResponse;
 import com.uade.tpo.grupo3.amancay.exceptions.NotFoundException;
 import com.uade.tpo.grupo3.amancay.repository.CategoryRepository;
