@@ -16,6 +16,7 @@ import com.uade.tpo.grupo3.amancay.entity.Category;
 import com.uade.tpo.grupo3.amancay.entity.Activity;
 import com.uade.tpo.grupo3.amancay.entity.dto.common.GenericResponse;
 import com.uade.tpo.grupo3.amancay.entity.dto.products.ProductRequest;
+import com.uade.tpo.grupo3.amancay.exceptions.NotFoundException;
 
 @Service
 public class ProductsServiceImpl implements ProductsService {
@@ -65,7 +66,10 @@ public class ProductsServiceImpl implements ProductsService {
     }
 
     public GenericResponse deleteProduct(Long productId) {
-        productRepository.deleteById(productId);
+        Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("No se encontró el producto con ID " + productId));
+        
+        productRepository.delete(product);
+        
         return new GenericResponse(productId, "Producto eliminado correctamente");
     }
 
@@ -103,10 +107,10 @@ public class ProductsServiceImpl implements ProductsService {
     }
 
     public Page<Product> getFilteredProducts(PageRequest pageRequest, Long categoryId, Long activityId, Double minPrice,
-            Double maxPrice) {
-        if (categoryId != null || activityId != null || minPrice != null || maxPrice != null) {
+            Double maxPrice, boolean withStock) {
+        if (categoryId != null || activityId != null || minPrice != null || maxPrice != null || withStock == true) {
             List<Product> products = productRepository.findByFilters(categoryId, activityId, minPrice, maxPrice,
-                    pageRequest);
+                    withStock, pageRequest);
             return new PageImpl<>(products, pageRequest, products.size());
         }
 

@@ -17,10 +17,10 @@ public interface ProductsService {
 
     public Product createProduct(ProductRequest product);
 
-    public GenericResponse deleteProduct(Long id);
+    public GenericResponse deleteProduct(Long id) throws InvalidParameterException;
 
     public GenericResponse updateProduct(Long id, ProductRequest product) throws InvalidParameterException;
 
     public Page<Product> getFilteredProducts(PageRequest pageRequest, Long categoryId, Long activityId, Double minPrice,
-            Double maxPrice);
+            Double maxPrice, boolean withStock);
 }

@@ -33,7 +33,10 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     public GenericResponse deleteCategory(Long categoryId) {
-        categoryRepository.deleteById(categoryId);
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new NotFoundException("No se encontró la categoría con ID " + categoryId));
+        
+        categoryRepository.delete(category);
+        
         return new GenericResponse(categoryId, "Categoría eliminada correctamente");
     }
 

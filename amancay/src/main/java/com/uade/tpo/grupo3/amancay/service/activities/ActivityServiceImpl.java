@@ -32,7 +32,10 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     public GenericResponse deleteActivity(Long activityId) {
-        activityRepository.deleteById(activityId);
+        Activity activity = activityRepository.findById(activityId).orElseThrow(() -> new NotFoundException("No se encontró la actividad con ID " + activityId));
+
+        activityRepository.delete(activity);
+        
         return new GenericResponse(activityId, "Actividad eliminada correctamente");
     }
 

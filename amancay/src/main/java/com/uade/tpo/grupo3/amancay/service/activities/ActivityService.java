@@ -19,7 +19,7 @@ public interface ActivityService {
 
     public Activity createActivity(String Name, String description) throws DuplicateException;
 
-    public GenericResponse deleteActivity(Long activityId);
+    public GenericResponse deleteActivity(Long activityId) throws InvalidParameterException;
 
     public GenericResponse updateActivity(Long activityId, ActivityRequest entity) throws InvalidParameterException;
 
