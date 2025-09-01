@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.grupo3.amancay.entity.Category;
 import com.uade.tpo.grupo3.amancay.entity.dto.categories.CategoryRequest;
-import com.uade.tpo.grupo3.amancay.entity.dto.categories.CategoryResponse;
+import com.uade.tpo.grupo3.amancay.entity.dto.common.GenericResponse;
 import com.uade.tpo.grupo3.amancay.exceptions.DuplicateException;
 import com.uade.tpo.grupo3.amancay.service.categories.CategoryService;
 
@@ -51,20 +51,22 @@ public class CategoriesController {
     }
 
     @PostMapping // POST /categories
-    public ResponseEntity<Object> createCategory(@RequestBody CategoryRequest categoryRequest)
-            throws DuplicateException {
-        Category result = categoryService.createCategory(categoryRequest.getName(), categoryRequest.getDescription());
+    public ResponseEntity<Object> createCategory(@RequestBody CategoryRequest request) throws DuplicateException {
+        Category result = categoryService.createCategory(request.getName(), request.getDescription());
         return ResponseEntity.created(URI.create("/categories/" + result.getId())).body(result);
     }
 
-   @PutMapping // PUT /categories/{id}
-   public ResponseEntity<CategoryResponse> updateCategory(@RequestBody CategoryRequest categoryRequest)  throws InvalidParameterException {
-      CategoryResponse result = categoryService.updateCategory(categoryRequest);
-      return ResponseEntity.ok().body(result);
-   }
+    @PutMapping("/{categoryId}") // PUT /categories/{categoryId}
+    public ResponseEntity<GenericResponse> updateCategory(@PathVariable Long categoryId,
+            @RequestBody CategoryRequest categoryRequest) throws InvalidParameterException {
+        GenericResponse result = categoryService.updateCategory(categoryId, categoryRequest);
+        return ResponseEntity.ok(result);
+    }
 
-    @DeleteMapping // PUT /categories/{id}
-    public void deleteCategory(@RequestBody CategoryRequest categoryRequest)  throws InvalidParameterException {
-      categoryService.deleteCategory(categoryRequest.getId());
+    @DeleteMapping("/{categoryId}") // DELETE /categories/{categoryId}
+    public ResponseEntity<GenericResponse> deleteCategory(@PathVariable Long categoryId)
+            throws InvalidParameterException {
+        GenericResponse result = categoryService.deleteCategory(categoryId);
+        return ResponseEntity.ok(result);
     }
 }

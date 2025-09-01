@@ -1,4 +1,3 @@
-
 package com.uade.tpo.grupo3.amancay.service.categories;
 
 import java.security.InvalidParameterException;
@@ -9,7 +8,7 @@ import org.springframework.data.domain.PageRequest;
 
 import com.uade.tpo.grupo3.amancay.entity.Category;
 import com.uade.tpo.grupo3.amancay.entity.dto.categories.CategoryRequest;
-import com.uade.tpo.grupo3.amancay.entity.dto.categories.CategoryResponse;
+import com.uade.tpo.grupo3.amancay.entity.dto.common.GenericResponse;
 
 public interface CategoryService {
     public Page<Category> getCategories(PageRequest pageRequest);
@@ -18,7 +17,7 @@ public interface CategoryService {
 
     public Category createCategory(String name, String description);
 
-    public void deleteCategory(Long categoryId);
+    public GenericResponse deleteCategory(Long categoryId) throws InvalidParameterException;
 
-    public CategoryResponse updateCategory(CategoryRequest entity) throws InvalidParameterException;
+    public GenericResponse updateCategory(Long categoryId, CategoryRequest categoryRequest) throws InvalidParameterException;
 }
