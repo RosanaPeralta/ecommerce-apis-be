@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.uade.tpo.grupo3.amancay.entity.dto.common.GenericResponse;
 import com.uade.tpo.grupo3.amancay.entity.dto.products.ProductRequest;
 import com.uade.tpo.grupo3.amancay.entity.dto.products.ProductResponse;
-import com.uade.tpo.grupo3.amancay.service.products.ProductsService;
+import com.uade.tpo.grupo3.amancay.service.Products.ProductsService;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;

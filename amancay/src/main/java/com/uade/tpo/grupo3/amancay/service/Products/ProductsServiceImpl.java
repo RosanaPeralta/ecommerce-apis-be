@@ -1,4 +1,4 @@
-package com.uade.tpo.grupo3.amancay.service.products;
+package com.uade.tpo.grupo3.amancay.service.Products;
 
 import java.util.ArrayList;
 import java.util.List;
