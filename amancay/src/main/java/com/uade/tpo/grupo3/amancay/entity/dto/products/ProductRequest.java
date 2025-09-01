@@ -14,15 +14,17 @@ public class ProductRequest {
     private Long activityId;
     private Long discountId;
 
-    public ProductRequest(String description, String name, int stock, Double price, String status, String imageUrl, Long categoryId, Long activityId, Long discountId){
-      this.description = description;
-      this.name = name;
-      this.stock = stock;
-      this.price = price;
-      this.status = status;
-      this.imageUrl = imageUrl;
-      this.categoryId = categoryId;
-      this.activityId = activityId;
-      this.discountId = discountId;
+
+    public ProductRequest(String description, String name, int stock, Double price, String status,
+            String imageUrl, Long categoryId, Long activityId, Long discountId) {
+        this.description = description;
+        this.name = name;
+        this.stock = stock;
+        this.price = price;
+        this.status = status;
+        this.imageUrl = imageUrl;
+        this.categoryId = categoryId;
+        this.activityId = activityId;
+        this.discountId = discountId;
     }
 }
