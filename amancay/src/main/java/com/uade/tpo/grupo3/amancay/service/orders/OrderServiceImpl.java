@@ -50,9 +50,8 @@ public class OrderServiceImpl implements OrderService {
         order.setNotes(orderRequest.getNotes());
         order.setOrderDate(LocalDateTime.now());
         order.setUpdatedDate(LocalDateTime.now());
-        order.setTotalAmount(0.0); // Inicializar totalAmount
+        order.setTotalAmount(0.0);
         
-        // Crear y agregar OrderItems
         if (orderRequest.getItems() != null && !orderRequest.getItems().isEmpty()) {
             for (OrderItemRequest itemRequest : orderRequest.getItems()) {
                 Product product = productRepository.findById(itemRequest.getProductId())
@@ -87,12 +86,8 @@ public class OrderServiceImpl implements OrderService {
         order.setNotes(orderRequest.getNotes());
         order.setUpdatedDate(LocalDateTime.now());
 
-        // Actualizar OrderItems si se proporcionan
         if (orderRequest.getItems() != null && !orderRequest.getItems().isEmpty()) {
-            // Limpiar items existentes
             order.getItems().clear();
-            
-            // Agregar nuevos items
             for (OrderItemRequest itemRequest : orderRequest.getItems()) {
                 Product product = productRepository.findById(itemRequest.getProductId())
                     .orElseThrow(() -> new NotFoundException("Product not found with id: " + itemRequest.getProductId()));
@@ -156,9 +151,6 @@ public class OrderServiceImpl implements OrderService {
         );
     }
     
-    /**
-     * Convierte una entidad OrderItem a OrderItemResponse
-     */
     private OrderItemResponse convertToOrderItemResponse(OrderItem orderItem) {
         return new OrderItemResponse(
             orderItem.getId(),
