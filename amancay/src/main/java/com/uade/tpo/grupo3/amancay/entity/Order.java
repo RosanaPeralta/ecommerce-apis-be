@@ -12,7 +12,6 @@ import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.Data;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +59,9 @@ public class Order {
     void prePersist() {
       orderDate = LocalDateTime.now();
       updatedDate = orderDate;
+      if (totalAmount == null) {
+          totalAmount = 0.0;
+      }
     }
 
     @PreUpdate
