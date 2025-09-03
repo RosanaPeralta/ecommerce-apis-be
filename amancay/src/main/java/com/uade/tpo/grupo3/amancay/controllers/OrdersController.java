@@ -133,8 +133,6 @@ public class OrdersController {
                 orders = orderService.getOrdersByStatus(status, PageRequest.of(0, Integer.MAX_VALUE));
             else
                 orders = orderService.getOrdersByStatus(status, PageRequest.of(page, size));
-            
-            // Convertir a OrderResponse para incluir OrderItems
             List<OrderResponse> orderResponses = orders.getContent().stream()
                 .map(order -> ((OrderServiceImpl) orderService).convertToOrderResponse(order))
                 .collect(java.util.stream.Collectors.toList());
@@ -157,8 +155,6 @@ public class OrdersController {
                 orders = orderService.getOrdersByCustomerId(customerId, PageRequest.of(0, Integer.MAX_VALUE));
             else
                 orders = orderService.getOrdersByCustomerId(customerId, PageRequest.of(page, size));
-            
-            // Convertir a OrderResponse para incluir OrderItems
             List<OrderResponse> orderResponses = orders.getContent().stream()
                 .map(order -> ((OrderServiceImpl) orderService).convertToOrderResponse(order))
                 .collect(java.util.stream.Collectors.toList());
@@ -181,8 +177,6 @@ public class OrdersController {
                 orders = orderService.getOrdersByProductId(productId, PageRequest.of(0, Integer.MAX_VALUE));
             else
                 orders = orderService.getOrdersByProductId(productId, PageRequest.of(page, size));
-            
-            // Convertir a OrderResponse para incluir OrderItems
             List<OrderResponse> orderResponses = orders.getContent().stream()
                 .map(order -> ((OrderServiceImpl) orderService).convertToOrderResponse(order))
                 .collect(java.util.stream.Collectors.toList());
