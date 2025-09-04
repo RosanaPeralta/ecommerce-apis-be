@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.grupo3.amancay.entity.dto.common.GenericResponse;
+import com.uade.tpo.grupo3.amancay.entity.dto.discounts.DiscountRequest;
 import com.uade.tpo.grupo3.amancay.entity.dto.products.ProductRequest;
 import com.uade.tpo.grupo3.amancay.entity.dto.products.ProductResponse;
 import com.uade.tpo.grupo3.amancay.service.Products.ProductsService;
@@ -89,6 +90,46 @@ public class ProductsController {
         }
 
         return ResponseEntity.ok(products);
+    }
+
+    // ===================== Descuentos de un producto =====================
+
+    /**
+     * Crea un descuento y lo asigna al producto.
+     * Body ejemplo:
+     * {
+     * "percentage": 15.0,
+     * "description": "Vuelta al cole"
+     * }
+     */
+    @PostMapping("/{productId}/discounts")
+    public ResponseEntity<ProductResponse> createAndAssignDiscount(
+            @PathVariable Long productId,
+            @RequestBody DiscountRequest request) {
+
+        ProductResponse updated = productsService.assignNewDiscountToProduct(productId, request);
+        return ResponseEntity.ok(updated);
+    }
+
+    /**
+     * Asigna un descuento existente al producto.
+     */
+    @PutMapping("/{productId}/discounts/{discountId}")
+    public ResponseEntity<ProductResponse> assignExistingDiscount(
+            @PathVariable Long productId,
+            @PathVariable Long discountId) {
+
+        ProductResponse updated = productsService.assignExistingDiscountToProduct(productId, discountId);
+        return ResponseEntity.ok(updated);
+    }
+
+    /**
+     * Quita el descuento del producto.
+     */
+    @DeleteMapping("/{productId}/discounts")
+    public ResponseEntity<GenericResponse> removeDiscount(@PathVariable Long productId) {
+        GenericResponse res = productsService.removeDiscountFromProduct(productId);
+        return ResponseEntity.ok(res);
     }
 
 }

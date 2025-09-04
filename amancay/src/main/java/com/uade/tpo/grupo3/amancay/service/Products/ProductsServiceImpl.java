@@ -1,5 +1,6 @@
 package com.uade.tpo.grupo3.amancay.service.Products;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -16,8 +17,10 @@ import com.uade.tpo.grupo3.amancay.repository.*;
 import com.uade.tpo.grupo3.amancay.entity.Product;
 import com.uade.tpo.grupo3.amancay.entity.ProductImage;
 import com.uade.tpo.grupo3.amancay.entity.Category;
+import com.uade.tpo.grupo3.amancay.entity.Discount;
 import com.uade.tpo.grupo3.amancay.entity.Activity;
 import com.uade.tpo.grupo3.amancay.entity.dto.common.GenericResponse;
+import com.uade.tpo.grupo3.amancay.entity.dto.discounts.DiscountRequest;
 import com.uade.tpo.grupo3.amancay.entity.dto.products.ProductRequest;
 import com.uade.tpo.grupo3.amancay.exceptions.NotFoundException;
 import com.uade.tpo.grupo3.amancay.entity.dto.products.ProductResponse;
@@ -34,6 +37,9 @@ public class ProductsServiceImpl implements ProductsService {
 
     @Autowired
     private ActivityRepository activityRepository;
+
+    @Autowired
+    private DiscountRepository discountRepository;
 
     public Page<ProductResponse> getProducts(PageRequest pageable) {
         Page<Product> products = productRepository.findAll(pageable);
@@ -76,10 +82,11 @@ public class ProductsServiceImpl implements ProductsService {
     }
 
     public GenericResponse deleteProduct(Long productId) {
-        Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("No se encontró el producto con ID " + productId));
-        
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new NotFoundException("No se encontró el producto con ID " + productId));
+
         productRepository.delete(product);
-        
+
         return new GenericResponse(productId, "Producto eliminado correctamente");
     }
 
@@ -115,15 +122,87 @@ public class ProductsServiceImpl implements ProductsService {
         return new GenericResponse(productId, "Producto actualizado correctamente");
     }
 
-    public Page<ProductResponse> getFilteredProducts(PageRequest pageRequest, Long categoryId, Long activityId, Double minPrice,
+    public Page<ProductResponse> getFilteredProducts(PageRequest pageRequest, Long categoryId, Long activityId,
+            Double minPrice,
             Double maxPrice, boolean withStock) {
         if (categoryId != null || activityId != null || minPrice != null || maxPrice != null || withStock == true) {
             List<Product> products = productRepository.findByFilters(categoryId, activityId, minPrice, maxPrice,
                     withStock, pageRequest);
-            return new PageImpl<>(products.stream().map(this::convertToResponse).collect(Collectors.toList()), pageRequest, products.size());
+            return new PageImpl<>(products.stream().map(this::convertToResponse).collect(Collectors.toList()),
+                    pageRequest, products.size());
         }
 
         return this.getProducts(pageRequest);
+    }
+
+    // ESTO LO AGREGUE PARA RELACION PRODUCTO - DESCUENTO
+    @Override
+    public ProductResponse assignExistingDiscountToProduct(Long productId, Long discountId)
+            throws InvalidParameterException {
+
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new NotFoundException("Producto " + productId + " no encontrado"));
+
+        Discount discount = discountRepository.findById(discountId)
+                .orElseThrow(() -> new NotFoundException("Descuento " + discountId + " no encontrado"));
+
+        product.setDiscount(discount);
+        productRepository.saveAndFlush(product);
+
+        return convertToResponse(product);
+    }
+
+    @Override
+    public ProductResponse assignNewDiscountToProduct(Long productId, DiscountRequest request) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new NotFoundException("No se encontró el producto con ID " + productId));
+
+        Discount discount = new Discount();
+        discount.setPercentage(request.getPercentage());
+        discount.setDescription(request.getDescription());
+        discount = discountRepository.save(discount);
+
+        product.setDiscount(discount);
+        productRepository.saveAndFlush(product);
+
+        return convertToResponse(product);
+    }
+
+    @Override
+    public ProductResponse createAndAssignDiscount(Long productId, DiscountRequest request)
+            throws InvalidParameterException {
+
+        if (request == null || request.getPercentage() == null) {
+            throw new InvalidParameterException("El porcentaje de descuento es obligatorio");
+        }
+        if (request.getPercentage() < 0 || request.getPercentage() > 100) {
+            throw new InvalidParameterException("El porcentaje debe estar entre 0 y 100");
+        }
+
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new NotFoundException("Producto " + productId + " no encontrado"));
+
+        Discount discount = new Discount();
+        discount.setPercentage(request.getPercentage());
+        discount.setDescription(request.getDescription());
+
+        Discount saved = discountRepository.save(discount);
+
+        product.setDiscount(saved);
+        productRepository.saveAndFlush(product);
+
+        return convertToResponse(product);
+    }
+
+    @Override
+    public GenericResponse removeDiscountFromProduct(Long productId) throws InvalidParameterException {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new NotFoundException("Producto " + productId + " no encontrado"));
+
+        product.setDiscount(null);
+        productRepository.saveAndFlush(product);
+
+        return new GenericResponse(productId, "Descuento removido correctamente del producto");
     }
 
     /**
@@ -147,6 +226,15 @@ public class ProductsServiceImpl implements ProductsService {
             categoryDto.setId(product.getCategory().getId());
             categoryDto.setName(product.getCategory().getName());
             response.setCategory(categoryDto);
+        }
+
+        // Convert discount
+        if (product.getDiscount() != null) {
+            ProductResponse.DiscountDto discountDto = new ProductResponse.DiscountDto();
+            discountDto.setId(product.getDiscount().getId());
+            discountDto.setPercentage(product.getDiscount().getPercentage());
+            discountDto.setDescription(product.getDiscount().getDescription());
+            response.setDiscount(discountDto);
         }
 
         // Convert activity
