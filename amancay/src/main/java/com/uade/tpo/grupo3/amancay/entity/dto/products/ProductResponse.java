@@ -13,7 +13,7 @@ public class ProductResponse {
     private String status;
     private String imageUrl;
     private CategoryDto category;
-    private ActivityDto activity;
+    private List<ActivityDto> activities;
     private DiscountDto discount;
     private List<ProductImageDto> images;
 
