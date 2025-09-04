@@ -2,24 +2,19 @@ package com.uade.tpo.grupo3.amancay.entity;
 
 import java.util.List;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
 @Data
 public class Product {
 
-    public Product(){
-    };
+    public Product() {
+        this.images = new ArrayList<>();
+    }
 
     public Product(String description, String name, int stock, Double price, String status, 
             String imageUrl, Category category, List<Activity> activities, Discount discount) {
@@ -28,7 +23,6 @@ public class Product {
         this.stock = stock;
         this.price = price;
         this.status = status;
-        this.imageUrl = imageUrl;
         this.category = category;
         this.activities = activities;
         this.discount = discount;
@@ -40,16 +34,18 @@ public class Product {
 
     @Column
     private String description;
+
     @Column
     private String name;
+
     @Column
     private int stock;
+
     @Column
     private Double price;
+
     @Column
     private String status;
-    @Column
-    private String imageUrl;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
@@ -62,4 +58,7 @@ public class Product {
     @OneToOne
     @JoinColumn(name = "discount_id")
     private Discount discount;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
+    private List<ProductImage> images;
 }

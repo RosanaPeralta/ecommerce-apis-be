@@ -17,8 +17,7 @@ public interface CategoryService {
 
     public Category createCategory(String name, String description);
 
-    public GenericResponse deleteCategory(Long categoryId);
+    public GenericResponse deleteCategory(Long categoryId) throws InvalidParameterException;
 
-    public GenericResponse updateCategory(Long categoryId, CategoryRequest categoryRequest)
-            throws InvalidParameterException;
+    public GenericResponse updateCategory(Long categoryId, CategoryRequest categoryRequest) throws InvalidParameterException;
 }

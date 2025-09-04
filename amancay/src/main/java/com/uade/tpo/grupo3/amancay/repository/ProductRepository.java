@@ -17,11 +17,13 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "(:categoryId IS NULL OR p.category.id = :categoryId) AND " +
             "(:activityId IS NULL OR a.id = :activityId) AND " +
             "(:minPrice IS NULL OR p.price >= :minPrice) AND " +
-            "(:maxPrice IS NULL OR p.price <= :maxPrice)")
+            "(:maxPrice IS NULL OR p.price <= :maxPrice) AND " +
+            "(:withStock = false OR p.stock > 0)")
     List<Product> findByFilters(@Param("categoryId") Long categoryId,
             @Param("activityId") Long activityId,
             @Param("minPrice") Double minPrice,
             @Param("maxPrice") Double maxPrice,
+            @Param("withStock") boolean withStock,
             Pageable pageable);
 
 }
