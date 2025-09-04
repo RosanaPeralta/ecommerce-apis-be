@@ -56,7 +56,9 @@ public class ProductsServiceImpl implements ProductsService {
         product.setPrice(productRequest.getPrice());
         product.setStock(productRequest.getStock());
         product.setStatus("ACTIVE");
-
+        product.setImages(productRequest.getImages());
+        System.out.println("categoryId: " + productRequest.getCategoryId());
+        System.out.println("activityIds: " + productRequest.getActivityIds());
         // Set category if is provided, and verify if the category exists
         if (productRequest.getCategoryId() != null) {
             Category category = categoryRepository.findById(productRequest.getCategoryId())
@@ -65,10 +67,9 @@ public class ProductsServiceImpl implements ProductsService {
         }
 
         // Set activity if is provided, and verify if the activity exists
-        if (productRequest.getActivityId() != null) {
-            Activity activity = activityRepository.findById(productRequest.getActivityId())
-                    .orElse(null);
-            product.setActivity(activity);
+        if (productRequest.getActivityIds() != null) {
+            List<Activity> activities = activityRepository.findAllById(productRequest.getActivityIds());
+            product.setActivities(activities);
         }
 
         Product savedProduct = productRepository.save(product);
@@ -105,10 +106,9 @@ public class ProductsServiceImpl implements ProductsService {
         }
 
         // Set activity if is provided, and verify if the activity exists
-        if (productRequest.getActivityId() != null) {
-            Activity activity = activityRepository.findById(productRequest.getActivityId())
-                    .orElse(null);
-            product.setActivity(activity != null ? activity : product.getActivity());
+        if (productRequest.getActivityIds() != null) {
+            List<Activity> activities = activityRepository.findAllById(productRequest.getActivityIds());
+            product.setActivities(activities != null ? activities : product.getActivities());
         }
 
         productRepository.saveAndFlush(product);
@@ -149,12 +149,16 @@ public class ProductsServiceImpl implements ProductsService {
             response.setCategory(categoryDto);
         }
 
-        // Convert activity
-        if (product.getActivity() != null) {
-            ProductResponse.ActivityDto activityDto = new ProductResponse.ActivityDto();
-            activityDto.setId(product.getActivity().getId());
-            activityDto.setName(product.getActivity().getName());
-            response.setActivity(activityDto);
+        // Convert activities
+        if (product.getActivities() != null) {
+            List<ProductResponse.ActivityDto> activityDtos = new ArrayList<>();
+            for (Activity activity : product.getActivities()) {
+                ProductResponse.ActivityDto activityDto = new ProductResponse.ActivityDto();
+                activityDto.setId(activity.getId());
+                activityDto.setName(activity.getName());
+                activityDtos.add(activityDto);
+            }
+            response.setActivities(activityDtos);
         }
 
         // Convert images

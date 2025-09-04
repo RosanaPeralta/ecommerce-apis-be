@@ -13,9 +13,9 @@ import com.uade.tpo.grupo3.amancay.entity.Product;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    @Query("SELECT p FROM Product p WHERE " +
+    @Query("SELECT DISTINCT p FROM Product p LEFT JOIN p.activities a WHERE " +
             "(:categoryId IS NULL OR p.category.id = :categoryId) AND " +
-            "(:activityId IS NULL OR p.activity.id = :activityId) AND " +
+            "(:activityId IS NULL OR a.id = :activityId) AND " +
             "(:minPrice IS NULL OR p.price >= :minPrice) AND " +
             "(:maxPrice IS NULL OR p.price <= :maxPrice) AND " +
             "(:withStock = false OR p.stock > 0)")
