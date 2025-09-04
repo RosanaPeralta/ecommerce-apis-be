@@ -56,7 +56,7 @@ public class ProductsServiceImpl implements ProductsService {
         product.setPrice(productRequest.getPrice());
         product.setStock(productRequest.getStock());
         product.setStatus("ACTIVE");
-        product.setImages(productRequest.getImageUrls()); //TODO: RESOLVER ESTO
+        product.setImages(productRequest.getImages());
         System.out.println("categoryId: " + productRequest.getCategoryId());
         System.out.println("activityIds: " + productRequest.getActivityIds());
         // Set category if is provided, and verify if the category exists
