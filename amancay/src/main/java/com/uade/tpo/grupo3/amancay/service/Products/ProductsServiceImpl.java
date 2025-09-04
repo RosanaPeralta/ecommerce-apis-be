@@ -55,10 +55,9 @@ public class ProductsServiceImpl implements ProductsService {
         }
 
         // Set activity if is provided, and verify if the activity exists
-        if (productRequest.getActivityId() != null) {
-            Activity activity = activityRepository.findById(productRequest.getActivityId())
-                    .orElse(null);
-            product.setActivity(activity);
+        if (productRequest.getActivityIds() != null) {
+            List<Activity> activities = activityRepository.findAllById(productRequest.getActivityIds());
+            product.setActivities(activities);
         }
 
         return productRepository.save(product);
@@ -92,10 +91,9 @@ public class ProductsServiceImpl implements ProductsService {
         }
 
         // Set activity if is provided, and verify if the activity exists
-        if (productRequest.getActivityId() != null) {
-            Activity activity = activityRepository.findById(productRequest.getActivityId())
-                    .orElse(null);
-            product.setActivity(activity != null ? activity : product.getActivity());
+        if (productRequest.getActivityIds() != null) {
+            List<Activity> activities = activityRepository.findAllById(productRequest.getActivityIds());
+            product.setActivities(activities != null ? activities : product.getActivities());
         }
 
         productRepository.save(product);
