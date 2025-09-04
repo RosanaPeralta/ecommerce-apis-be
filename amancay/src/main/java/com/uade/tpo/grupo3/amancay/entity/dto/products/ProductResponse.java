@@ -32,7 +32,7 @@ public class ProductResponse {
     @Data
     public static class DiscountDto {
         private Long id;
-        private String name;
+        private String description;
         private Double percentage;
     }
 
