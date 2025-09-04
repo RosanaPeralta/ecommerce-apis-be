@@ -1,5 +1,9 @@
 package com.uade.tpo.grupo3.amancay.entity.dto.products;
 
+import java.util.List;
+
+import com.uade.tpo.grupo3.amancay.entity.ProductImage;
+
 import lombok.Data;
 
 @Data
@@ -9,22 +13,20 @@ public class ProductRequest {
     private int stock;
     private Double price;
     private String status;
-    private String imageUrl;
+    private List<ProductImage> images;
     private Long categoryId;
-    private Long activityId;
+    private List<Long> activityIds;  
     private Long discountId;
 
-
-    public ProductRequest(String description, String name, int stock, Double price, String status,
-            String imageUrl, Long categoryId, Long activityId, Long discountId) {
-        this.description = description;
-        this.name = name;
-        this.stock = stock;
-        this.price = price;
-        this.status = status;
-        this.imageUrl = imageUrl;
-        this.categoryId = categoryId;
-        this.activityId = activityId;
-        this.discountId = discountId;
+    public ProductRequest(String description, String name, int stock, Double price, String status, List<ProductImage> images, Long categoryId, List<Long> activityIds, Long discountId){
+      this.description = description;
+      this.name = name;
+      this.stock = stock;
+      this.price = price;
+      this.status = status;
+      this.images = images;
+      this.categoryId = categoryId;
+      this.activityIds = activityIds;
+      this.discountId = discountId;
     }
 }
