@@ -30,9 +30,54 @@ public class SecurityConfig {
                                 .csrf(AbstractHttpConfigurer::disable)
                                 .authorizeHttpRequests(req -> req
                                                  .requestMatchers("/api/v1/auth/**").permitAll()
-                                                 .requestMatchers(HttpMethod.GET,"/categories").hasAuthority(Role.USER.name())
-                                                 .requestMatchers(HttpMethod.PUT,"/categories/**").permitAll()
-                                                 .requestMatchers(HttpMethod.POST,"/categories").hasAuthority(Role.SELLER.name())
+
+                                                 //Lectura: Ambos
+                                                 .requestMatchers(HttpMethod.GET,
+                                                        "/products/**",
+                                                        "/categories/**",
+                                                        "/activities/**",
+                                                        "/product-images/**",
+                                                        "/stock/**",
+                                                        "/reviews/**")
+                                                .hasAnyAuthority(Role.USER.name(), Role.SELLER.name())
+
+                                                //Escritura: Solo vendedores
+                                                 .requestMatchers(HttpMethod.POST,
+                                                        "/products/**",
+                                                        "/categories/**",
+                                                        "/activities/**",
+                                                        "/product-images/**",
+                                                        "/discounts/**",
+                                                        "/stock/**").hasAuthority(Role.SELLER.name())
+
+                                                .requestMatchers(HttpMethod.PUT,
+                                                        "/products/**",
+                                                        "/categories/**",
+                                                        "/activities/**",
+                                                        "/product-images/**",
+                                                        "/discounts/**",
+                                                        "/stock/**",
+                                                        "/orders/**").hasAuthority(Role.SELLER.name())
+
+                                                .requestMatchers(HttpMethod.DELETE,
+                                                        "/products/**",
+                                                        "/categories/**",
+                                                        "/activities/**",
+                                                        "/product-images/**",
+                                                        "/discounts/**",
+                                                        "/stock/**",
+                                                        "/orders/**")
+                                                .hasAuthority(Role.SELLER.name())
+
+                                                //Escritura: Solo usuarios
+                                                .requestMatchers(HttpMethod.POST, 
+                                                        "/reviews/**",
+                                                         "/orders/**") //Comprar
+                                                .hasAuthority(Role.USER.name())
+
+                                                .requestMatchers(HttpMethod.PUT, "/reviews/**").hasAuthority(Role.USER.name())
+                                                .requestMatchers(HttpMethod.DELETE, "/reviews/**").hasAuthority(Role.USER.name())
+
                                                  .anyRequest()
                                                  .authenticated()
                                                 )
