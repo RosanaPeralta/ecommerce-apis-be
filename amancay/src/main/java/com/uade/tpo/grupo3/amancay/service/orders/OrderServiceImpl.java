@@ -19,9 +19,11 @@ import com.uade.tpo.grupo3.amancay.entity.dto.orders.OrderResponse;
 import com.uade.tpo.grupo3.amancay.entity.dto.orders.OrderItemRequest;
 import com.uade.tpo.grupo3.amancay.entity.dto.orders.OrderItemResponse;
 import com.uade.tpo.grupo3.amancay.entity.dto.orders.OrderStatusUpdateRequest;
+import com.uade.tpo.grupo3.amancay.entity.dto.stock.StockUpdateRequest;
 import com.uade.tpo.grupo3.amancay.exceptions.NotFoundException;
 import com.uade.tpo.grupo3.amancay.repository.OrderRepository;
 import com.uade.tpo.grupo3.amancay.repository.ProductRepository;
+import com.uade.tpo.grupo3.amancay.service.stock.StockService;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -31,6 +33,9 @@ public class OrderServiceImpl implements OrderService {
     
     @Autowired
     private ProductRepository productRepository;
+    
+    @Autowired
+    private StockService stockService;
 
     @Override
     public Page<Order> getOrders(PageRequest pageRequest) {
@@ -44,6 +49,17 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order createOrder(OrderRequest orderRequest) {
+        if (orderRequest.getItems() != null && !orderRequest.getItems().isEmpty()) {
+            for (OrderItemRequest itemRequest : orderRequest.getItems()) {
+                Product product = productRepository.findById(itemRequest.getProductId())
+                    .orElseThrow(() -> new NotFoundException("Product not found with id: " + itemRequest.getProductId()));
+                if (!stockService.hasStock(itemRequest.getProductId(), itemRequest.getQuantity())) {
+                    throw new InvalidParameterException("Insufficient stock for product: " + product.getName() + 
+                        ". Required: " + itemRequest.getQuantity() + ", Available: " + product.getStock());
+                }
+            }
+        }
+        
         Order order = new Order();
         order.setCustomerId(orderRequest.getCustomerId());
         order.setStatus(orderRequest.getStatus() != null ? orderRequest.getStatus() : "PENDING");
@@ -56,8 +72,11 @@ public class OrderServiceImpl implements OrderService {
             for (OrderItemRequest itemRequest : orderRequest.getItems()) {
                 Product product = productRepository.findById(itemRequest.getProductId())
                     .orElseThrow(() -> new NotFoundException("Product not found with id: " + itemRequest.getProductId()));
-                
-                order.addItem(product, itemRequest.getQuantity(), itemRequest.getUnitPrice());
+                StockUpdateRequest stockUpdate = new StockUpdateRequest();
+                stockUpdate.setQuantity(itemRequest.getQuantity());
+                stockService.decrementStock(itemRequest.getProductId(), stockUpdate);
+
+                order.addItem(product, itemRequest.getQuantity(), product.getPrice());
             }
         }
         
@@ -66,9 +85,11 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public GenericResponse deleteOrder(Long id) {
-        if (!orderRepository.existsById(id)) {
+        Optional<Order> order = orderRepository.findById(id);
+        if (order.isEmpty()) {
             throw new NotFoundException("Order not found with id: " + id);
         }
+         
         orderRepository.deleteById(id);
         return new GenericResponse(id, "Order deleted successfully");
     }
@@ -81,20 +102,36 @@ public class OrderServiceImpl implements OrderService {
         }
 
         Order order = existingOrder.get();
-        order.setCustomerId(orderRequest.getCustomerId());
-        order.setStatus(orderRequest.getStatus());
-        order.setNotes(orderRequest.getNotes());
-        order.setUpdatedDate(LocalDateTime.now());
-
+        
         if (orderRequest.getItems() != null && !orderRequest.getItems().isEmpty()) {
+
+            for (OrderItemRequest itemRequest : orderRequest.getItems()) {
+                Product product = productRepository.findById(itemRequest.getProductId())
+                    .orElseThrow(() -> new NotFoundException("Product not found with id: " + itemRequest.getProductId()));
+                
+                if (!stockService.hasStock(itemRequest.getProductId(), itemRequest.getQuantity())) {
+                    throw new InvalidParameterException("Insufficient stock for product: " + product.getName() + 
+                        ". Required: " + itemRequest.getQuantity() + ", Available: " + product.getStock());
+                }
+            }
+            
             order.getItems().clear();
             for (OrderItemRequest itemRequest : orderRequest.getItems()) {
                 Product product = productRepository.findById(itemRequest.getProductId())
                     .orElseThrow(() -> new NotFoundException("Product not found with id: " + itemRequest.getProductId()));
                 
-                order.addItem(product, itemRequest.getQuantity(), itemRequest.getUnitPrice());
+                StockUpdateRequest stockUpdate = new StockUpdateRequest();
+                stockUpdate.setQuantity(itemRequest.getQuantity());
+                stockService.decrementStock(itemRequest.getProductId(), stockUpdate);
+                
+                order.addItem(product, itemRequest.getQuantity(), product.getPrice());
             }
         }
+        
+        order.setCustomerId(orderRequest.getCustomerId());
+        order.setStatus(orderRequest.getStatus());
+        order.setNotes(orderRequest.getNotes());
+        order.setUpdatedDate(LocalDateTime.now());
 
         orderRepository.save(order);
         return new GenericResponse(id, "Order updated successfully");

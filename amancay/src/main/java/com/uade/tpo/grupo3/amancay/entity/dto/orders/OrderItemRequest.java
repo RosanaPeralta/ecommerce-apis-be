@@ -6,15 +6,13 @@ import lombok.Data;
 public class OrderItemRequest {
     private Long productId;
     private Integer quantity;
-    private Double unitPrice;
 
     public OrderItemRequest() {
     }
 
-    public OrderItemRequest(Long productId, Integer quantity, Double unitPrice) {
+    public OrderItemRequest(Long productId, Integer quantity) {
         this.productId = productId;
         this.quantity = quantity;
-        this.unitPrice = unitPrice;
     }
 }
 
