@@ -32,7 +32,7 @@ public class ProductImageServiceImpl implements ProductImageService {
     @Override
     public List<ProductImagesResponse> uploadImages(Long productId, MultipartFile[] files) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found with id: " + productId));
+                .orElseThrow(() -> new RuntimeException("Product with ID " + productId + " was not found."));
 
         List<ProductImagesResponse> productImagesResponses = new ArrayList<>();
         for (MultipartFile file : files) {
@@ -68,13 +68,13 @@ public class ProductImageServiceImpl implements ProductImageService {
     public GenericResponse deleteAllProductImages(Long productId) {
         List<ProductImage> images = productImageRepository.findByProductId(productId);
         productImageRepository.deleteAll(images);
-        return new GenericResponse(productId, "All images associated to the product have been deleted successfully");
+        return new GenericResponse(productId, "All images associated to the product have been deleted successfully.");
     }
 
     @Override
     public List<ProductImagesResponse> updateImages(Long productId, MultipartFile[] files) {
         productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found with id: " + productId));
+                .orElseThrow(() -> new RuntimeException("Product with ID " + productId + " was not found."));
 
         // Delete all images associated to the product
         this.deleteAllProductImages(productId);

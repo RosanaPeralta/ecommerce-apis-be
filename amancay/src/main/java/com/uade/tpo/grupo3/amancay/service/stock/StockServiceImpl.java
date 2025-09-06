@@ -20,11 +20,11 @@ public class StockServiceImpl implements StockService {
     @Override
     public StockResponse getStock(Long productId) {
         if (productId == null || productId <= 0) {
-            throw new InvalidParameterException("Invalid product ID");
+            throw new InvalidParameterException("Invalid product ID.");
         }
         
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new NotFoundException("Product not found with ID: " + productId));
+                .orElseThrow(() -> new NotFoundException("Product with ID " + productId + " was not found."));
         
         return new StockResponse(
             product.getId(),
@@ -37,15 +37,15 @@ public class StockServiceImpl implements StockService {
     @Override
     public StockResponse incrementStock(Long productId, StockUpdateRequest request) {
         if (productId == null || productId <= 0) {
-            throw new InvalidParameterException("Invalid product ID");
+            throw new InvalidParameterException("Invalid product ID.");
         }
         
         if (request == null || request.getQuantity() <= 0) {
-            throw new InvalidParameterException("Quantity must be greater than 0");
+            throw new InvalidParameterException("Quantity must be greater than 0.");
         }
         
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new NotFoundException("Product not found with ID: " + productId));
+                .orElseThrow(() -> new NotFoundException("Product with ID " + productId + " was not found."));
         
         product.setStock(product.getStock() + request.getQuantity());
         productRepository.save(product);
@@ -61,15 +61,15 @@ public class StockServiceImpl implements StockService {
     @Override
     public StockResponse decrementStock(Long productId, StockUpdateRequest request) {
         if (productId == null || productId <= 0) {
-            throw new InvalidParameterException("Invalid product ID");
+            throw new InvalidParameterException("Invalid product ID.");
         }
         
         if (request == null || request.getQuantity() <= 0) {
-            throw new InvalidParameterException("Quantity must be greater than 0");
+            throw new InvalidParameterException("Quantity must be greater than 0.");
         }
         
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new NotFoundException("Product not found with ID: " + productId));
+                .orElseThrow(() -> new NotFoundException("Product with ID " + productId + " was not found."));
         
         if (product.getStock() < request.getQuantity()) {
             throw new InvalidParameterException("Insufficient stock. Available: " + product.getStock() + 
@@ -90,15 +90,15 @@ public class StockServiceImpl implements StockService {
     @Override
     public boolean hasStock(Long productId, int requiredQuantity) {
         if (productId == null || productId <= 0) {
-            throw new InvalidParameterException("Invalid product ID");
+            throw new InvalidParameterException("Invalid product ID.");
         }
         
         if (requiredQuantity < 0) {
-            throw new InvalidParameterException("Required quantity cannot be negative");
+            throw new InvalidParameterException("Required quantity cannot be negative.");
         }
         
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new NotFoundException("Product not found with ID: " + productId));
+                .orElseThrow(() -> new NotFoundException("Product with ID " + productId + " was not found."));
         
         return product.getStock() >= requiredQuantity;
     }

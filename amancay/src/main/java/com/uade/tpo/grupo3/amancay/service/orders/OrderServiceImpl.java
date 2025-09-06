@@ -52,9 +52,9 @@ public class OrderServiceImpl implements OrderService {
         if (orderRequest.getItems() != null && !orderRequest.getItems().isEmpty()) {
             for (OrderItemRequest itemRequest : orderRequest.getItems()) {
                 Product product = productRepository.findById(itemRequest.getProductId())
-                    .orElseThrow(() -> new NotFoundException("Product not found with id: " + itemRequest.getProductId()));
+                    .orElseThrow(() -> new NotFoundException("Product with ID " + itemRequest.getProductId() + " was not found."));
                 if (!stockService.hasStock(itemRequest.getProductId(), itemRequest.getQuantity())) {
-                    throw new InvalidParameterException("Insufficient stock for product: " + product.getName() + 
+                    throw new InvalidParameterException("Insufficient stock for product " + product.getName() + 
                         ". Required: " + itemRequest.getQuantity() + ", Available: " + product.getStock());
                 }
             }
@@ -71,7 +71,7 @@ public class OrderServiceImpl implements OrderService {
         if (orderRequest.getItems() != null && !orderRequest.getItems().isEmpty()) {
             for (OrderItemRequest itemRequest : orderRequest.getItems()) {
                 Product product = productRepository.findById(itemRequest.getProductId())
-                    .orElseThrow(() -> new NotFoundException("Product not found with id: " + itemRequest.getProductId()));
+                    .orElseThrow(() -> new NotFoundException("Product with ID " + itemRequest.getProductId() + " was not found."));
                 StockUpdateRequest stockUpdate = new StockUpdateRequest();
                 stockUpdate.setQuantity(itemRequest.getQuantity());
                 stockService.decrementStock(itemRequest.getProductId(), stockUpdate);
@@ -87,18 +87,18 @@ public class OrderServiceImpl implements OrderService {
     public GenericResponse deleteOrder(Long id) {
         Optional<Order> order = orderRepository.findById(id);
         if (order.isEmpty()) {
-            throw new NotFoundException("Order not found with id: " + id);
+            throw new NotFoundException("Order with ID " + id + " was not found.");
         }
          
         orderRepository.deleteById(id);
-        return new GenericResponse(id, "Order deleted successfully");
+        return new GenericResponse(id, "Order deleted successfully.");
     }
 
     @Override
     public GenericResponse updateOrder(Long id, OrderRequest orderRequest) throws InvalidParameterException {
         Optional<Order> existingOrder = orderRepository.findById(id);
         if (existingOrder.isEmpty()) {
-            throw new NotFoundException("Order not found with id: " + id);
+            throw new NotFoundException("Order with ID " + id + " was not found.");
         }
 
         Order order = existingOrder.get();
@@ -107,10 +107,10 @@ public class OrderServiceImpl implements OrderService {
 
             for (OrderItemRequest itemRequest : orderRequest.getItems()) {
                 Product product = productRepository.findById(itemRequest.getProductId())
-                    .orElseThrow(() -> new NotFoundException("Product not found with id: " + itemRequest.getProductId()));
+                    .orElseThrow(() -> new NotFoundException("Product with ID " + itemRequest.getProductId() + " was not found."));
                 
                 if (!stockService.hasStock(itemRequest.getProductId(), itemRequest.getQuantity())) {
-                    throw new InvalidParameterException("Insufficient stock for product: " + product.getName() + 
+                    throw new InvalidParameterException("Insufficient stock for product " + product.getName() + 
                         ". Required: " + itemRequest.getQuantity() + ", Available: " + product.getStock());
                 }
             }
@@ -118,7 +118,7 @@ public class OrderServiceImpl implements OrderService {
             order.getItems().clear();
             for (OrderItemRequest itemRequest : orderRequest.getItems()) {
                 Product product = productRepository.findById(itemRequest.getProductId())
-                    .orElseThrow(() -> new NotFoundException("Product not found with id: " + itemRequest.getProductId()));
+                    .orElseThrow(() -> new NotFoundException("Product with ID " + itemRequest.getProductId() + " was not found."));
                 
                 StockUpdateRequest stockUpdate = new StockUpdateRequest();
                 stockUpdate.setQuantity(itemRequest.getQuantity());
@@ -134,7 +134,7 @@ public class OrderServiceImpl implements OrderService {
         order.setUpdatedDate(LocalDateTime.now());
 
         orderRepository.save(order);
-        return new GenericResponse(id, "Order updated successfully");
+        return new GenericResponse(id, "Order updated successfully.");
     }
 
     @Override
@@ -156,7 +156,7 @@ public class OrderServiceImpl implements OrderService {
     public GenericResponse updateOrderStatus(Long id, OrderStatusUpdateRequest statusUpdate) throws InvalidParameterException {
         Optional<Order> existingOrder = orderRepository.findById(id);
         if (existingOrder.isEmpty()) {
-            throw new NotFoundException("Order not found with id: " + id);
+            throw new NotFoundException("Order with ID " + id + " was not found.");
         }
 
         Order order = existingOrder.get();
@@ -167,7 +167,7 @@ public class OrderServiceImpl implements OrderService {
         order.setUpdatedDate(LocalDateTime.now());
 
         orderRepository.save(order);
-        return new GenericResponse(id, "Order status updated successfully");
+        return new GenericResponse(id, "Order status updated successfully.");
     }
     
     @Override

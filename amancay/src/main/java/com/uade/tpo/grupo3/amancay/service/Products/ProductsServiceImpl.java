@@ -84,16 +84,16 @@ public class ProductsServiceImpl implements ProductsService {
 
     public GenericResponse deleteProduct(Long productId) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new NotFoundException("No se encontró el producto con ID " + productId));
+                .orElseThrow(() -> new NotFoundException("Product with ID " + productId + " was not found."));
 
         productRepository.delete(product);
 
-        return new GenericResponse(productId, "Producto eliminado correctamente");
+        return new GenericResponse(productId, "Product deleted successfully.");
     }
 
     public GenericResponse updateProduct(Long productId, ProductRequest productRequest) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("No se encontró el producto con id: " + productId));
+                .orElseThrow(() -> new RuntimeException("Product with ID " + productId + " was not found."));
 
         product.setName(productRequest.getName() != null ? productRequest.getName() : product.getName());
         product.setDescription(
@@ -119,7 +119,7 @@ public class ProductsServiceImpl implements ProductsService {
         }
 
         productRepository.saveAndFlush(product);
-        return new GenericResponse(productId, "Producto actualizado correctamente");
+        return new GenericResponse(productId, "Product with ID " + productId + "was updated.");
     }
 
     public Page<ProductResponse> getFilteredProducts(PageRequest pageRequest, Long categoryId, Long activityId,
@@ -141,10 +141,10 @@ public class ProductsServiceImpl implements ProductsService {
             throws InvalidParameterException {
 
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new NotFoundException("Producto " + productId + " no encontrado"));
+                .orElseThrow(() -> new NotFoundException("Product with ID " + productId + " was not found."));
 
         Discount discount = discountRepository.findById(discountId)
-                .orElseThrow(() -> new NotFoundException("Descuento " + discountId + " no encontrado"));
+                .orElseThrow(() -> new NotFoundException("Discount with ID " + discountId + " was not found."));
 
         product.setDiscount(discount);
         productRepository.saveAndFlush(product);
@@ -155,7 +155,7 @@ public class ProductsServiceImpl implements ProductsService {
     @Override
     public ProductResponse assignNewDiscountToProduct(Long productId, DiscountRequest request) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new NotFoundException("No se encontró el producto con ID " + productId));
+                .orElseThrow(() -> new NotFoundException("Product with ID " + productId + " was not found."));
 
         Discount discount = new Discount();
         discount.setPercentage(request.getPercentage());
@@ -173,14 +173,14 @@ public class ProductsServiceImpl implements ProductsService {
             throws InvalidParameterException {
 
         if (request == null || request.getPercentage() == null) {
-            throw new InvalidParameterException("El porcentaje de descuento es obligatorio");
+            throw new InvalidParameterException("The discount percentage is required.");
         }
         if (request.getPercentage() < 0 || request.getPercentage() > 100) {
-            throw new InvalidParameterException("El porcentaje debe estar entre 0 y 100");
+            throw new InvalidParameterException("The percentage must be between 0 and 100.");
         }
 
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new NotFoundException("Producto " + productId + " no encontrado"));
+                .orElseThrow(() -> new NotFoundException("Product with ID " + productId + " was not found."));
 
         Discount discount = new Discount();
         discount.setPercentage(request.getPercentage());
@@ -197,12 +197,12 @@ public class ProductsServiceImpl implements ProductsService {
     @Override
     public GenericResponse removeDiscountFromProduct(Long productId) throws InvalidParameterException {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new NotFoundException("Producto " + productId + " no encontrado"));
+                .orElseThrow(() -> new NotFoundException("Product with ID " + productId + " was not found."));
 
         product.setDiscount(null);
         productRepository.saveAndFlush(product);
 
-        return new GenericResponse(productId, "Descuento removido correctamente del producto");
+        return new GenericResponse(productId, "Discount successfully removed from the product with ID " + productId);
     }
 
     /**

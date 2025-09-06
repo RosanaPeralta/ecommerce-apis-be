@@ -48,7 +48,7 @@ public class DiscountServiceImpl implements DiscountService {
     @Override
     public DiscountResponse updateDiscount(DiscountRequest req) throws InvalidParameterException {
         Discount discount = discountRepository.findById(req.getId())
-                .orElseThrow(() -> new NotFoundException("Fallo la actualizacion"));
+                .orElseThrow(() -> new NotFoundException("The update failed."));
 
         if (req.getPercentage() != null) {
             validatePercentage(req.getPercentage());
@@ -70,7 +70,7 @@ public class DiscountServiceImpl implements DiscountService {
 
     private void validatePercentage(Double percentage) {
         if (percentage == null || percentage < 0.0 || percentage > 100.0) {
-            throw new InvalidParameterException("El porcentaje debe estar entre 0 y 100");
+            throw new InvalidParameterException("The percentage must be between 0 and 100.");
         }
     }
 }
