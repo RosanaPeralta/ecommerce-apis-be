@@ -38,9 +38,9 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public ReviewResponse createReview(ReviewRequest reviewRequest) throws DuplicateException {
         User user = userRepository.findById(reviewRequest.getUserId())
-                .orElseThrow(() -> new NotFoundException("Usuario no encontrado con ID: " + reviewRequest.getUserId()));
+                .orElseThrow(() -> new NotFoundException("User with ID " + reviewRequest.getUserId() + " was not found."));
         Product product = productRepository.findById(reviewRequest.getProductId())
-                .orElseThrow(() -> new NotFoundException("Producto no encontrado con ID: " + reviewRequest.getProductId()));
+                .orElseThrow(() -> new NotFoundException("Product with ID " + reviewRequest.getProductId() + " was not found."));
         if (reviewRepository.existsByUserIdAndProductId(reviewRequest.getUserId(), reviewRequest.getProductId())) {
             throw new DuplicateException();
         }
@@ -98,11 +98,11 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public ReviewResponse updateReview(Long id, ReviewRequest reviewRequest) {
         Review review = reviewRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Reseña no encontrada con ID: " + id));
+                .orElseThrow(() -> new NotFoundException("Review with ID " + id + " was not found."));
         User user = userRepository.findById(reviewRequest.getUserId())
-                .orElseThrow(() -> new NotFoundException("Usuario no encontrado con ID: " + reviewRequest.getUserId()));
+                .orElseThrow(() -> new NotFoundException("User with ID " + reviewRequest.getUserId() + " was not found."));
         Product product = productRepository.findById(reviewRequest.getProductId())
-                .orElseThrow(() -> new NotFoundException("Producto no encontrado con ID: " + reviewRequest.getProductId()));
+                .orElseThrow(() -> new NotFoundException("Product with ID " + reviewRequest.getProductId() + " was not found."));
         review.setUser(user);
         review.setProduct(product);
         review.setComment(reviewRequest.getComment());
@@ -115,10 +115,10 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public GenericResponse deleteReview(Long id) {
         Review review = reviewRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Reseña no encontrada con ID: " + id));
+                .orElseThrow(() -> new NotFoundException("Review with ID " + id + " was not found."));
 
         reviewRepository.delete(review);
-        return new GenericResponse(id, "Reseña eliminada correctamente");
+        return new GenericResponse(id, "Review deleted successfully.");
     }
 
 

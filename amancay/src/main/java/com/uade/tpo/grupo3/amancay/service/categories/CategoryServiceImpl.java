@@ -34,21 +34,21 @@ public class CategoryServiceImpl implements CategoryService {
     public GenericResponse deleteCategory(Long categoryId) {
 
         categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new NotFoundException("No se encontró la categoría con id: " + categoryId));
+                .orElseThrow(() -> new NotFoundException("Category with ID " + categoryId + " was not found."));
 
         categoryRepository.deleteById(categoryId);
-        return new GenericResponse(categoryId, "Categoría eliminada correctamente");
+        return new GenericResponse(categoryId, "Category deleted successfully.");
     }
 
     public GenericResponse updateCategory(Long categoryId, CategoryRequest categoryRequest) {
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new NotFoundException("No se encontró la categoría con id: " + categoryId));
+                .orElseThrow(() -> new NotFoundException("Category with ID " + categoryId + " was not found."));
 
         category.setName(categoryRequest.getName());
         category.setDescription(categoryRequest.getDescription());
 
         categoryRepository.save(category);
 
-        return new GenericResponse(categoryId, "Categoría actualizada correctamente");
+        return new GenericResponse(categoryId, "Category with ID " + categoryId + "was updated.");
     }
 }

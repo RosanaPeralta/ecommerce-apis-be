@@ -20,7 +20,7 @@ public class ActivityServiceImpl implements ActivityService {
     private ActivityRepository activityRepository;
 
     public Page<Activity> getActivities(PageRequest pageable) {
-        return activityRepository.findAll(pageable); //agregar excepción
+        return activityRepository.findAll(pageable);
     }
 
     public Optional<Activity> getActivityById(Long activityId) {
@@ -28,26 +28,26 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     public Activity createActivity(String name, String description) {
-        return activityRepository.save(new Activity(name, description)); //agregar excepción si falla la creación
+        return activityRepository.save(new Activity(name, description));
     }
 
     public GenericResponse deleteActivity(Long activityId) {
-        Activity activity = activityRepository.findById(activityId).orElseThrow(() -> new NotFoundException("No se encontró la actividad con ID " + activityId));
+        Activity activity = activityRepository.findById(activityId).orElseThrow(() -> new NotFoundException("Activity not found with ID " + activityId));
 
         activityRepository.delete(activity);
         
-        return new GenericResponse(activityId, "Actividad eliminada correctamente");
+        return new GenericResponse(activityId, "Activity deleted successfully.");
     }
 
     public GenericResponse updateActivity(Long activityId, ActivityRequest activityRequest) {
-        Activity activity = activityRepository.findById(activityId).orElseThrow(() -> new NotFoundException("No se encontró la actividad con ID " + activityId));
+        Activity activity = activityRepository.findById(activityId).orElseThrow(() -> new NotFoundException("Activity with ID " + activityId + " was not found."));
 
         activity.setName(activityRequest.getName());
         activity.setDescription(activityRequest.getDescription());
 
         activityRepository.saveAndFlush(activity);
 
-        return new GenericResponse(activityId, "Se actualizó la actividad con id " + activityId);
+        return new GenericResponse(activityId, "Activity with ID " + activityId + " was updated.");
     }
     
 }
